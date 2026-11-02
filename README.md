@@ -7,13 +7,25 @@ prix par ville (admin) avec ajustement par utilisateur. Normes visées : BAEL.
     cp .env.example .env        # puis éditer SECRET_KEY et ADMIN_EMAIL
     docker compose up --build   # API sur http://localhost:8000/docs
 
+Dans un second terminal, lancer l’interface :
+    cd frontend && npm ci && npm run dev
+
+L’application est alors disponible sur http://localhost:5173. Elle utilise
+`VITE_API_URL` pour joindre l’API (par défaut `http://localhost:8000`). Pour
+un autre environnement, définir cette variable avant le build.
+
 ## Tests
     cd backend && python -m venv .venv && .venv/bin/pip install -r requirements-dev.txt
     .venv/bin/python -m pytest -q
 
 ## Déployer sur Render
-Pousser le dépôt sur GitHub, puis Render > New > Blueprint. Renseigner ADMIN_EMAIL
-et CORS_ORIGINS (URL du futur frontend). Le compte créé avec ADMIN_EMAIL devient admin.
+Pousser le dépôt sur GitHub, puis Render > New > Blueprint en sélectionnant le
+dossier racine du dépôt. Le Blueprint crée l’API et le frontend statique. Renseigner
+`ADMIN_EMAIL` ; les services `geocivil-api-v2`, `geocivil-db-v2` et
+`geocivil-frontend-v2` sont indépendants des anciens services. Le frontend cible
+`https://geocivil-api-v2.onrender.com` et l’API autorise
+`https://geocivil-frontend-v2.onrender.com`. Le compte créé avec `ADMIN_EMAIL`
+devient admin. La nouvelle base est vide et ne reprend pas les données précédentes.
 
 ## Principaux endpoints
 POST /auth/register, /auth/login · GET /auth/me · CRUD /projects ·
